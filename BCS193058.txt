@@ -1,0 +1,63 @@
+import requests
+import json
+import tkinter as tk
+
+# Define the Tkinter GUI
+root = tk.Tk()
+root.title('Currency Converter')
+root.configure(bg='#FFFFFF')
+
+# Define the input widgets
+amount_label = tk.Label(root, text='Amount:', bg='#FFFFFF', fg='#000000')
+amount_label.grid(row=0, column=0, padx=10, pady=10)
+
+amount_entry = tk.Entry(root, bg='#FFFFFF', fg='#000000')
+amount_entry.grid(row=0, column=1, padx=10, pady=10)
+
+from_currency_label = tk.Label(root, text='From Currency:', bg='#FFFFFF', fg='#000000')
+from_currency_label.grid(row=1, column=0, padx=10, pady=10)
+
+from_currency = tk.StringVar()
+from_currency.set('USD')
+
+from_currency_dropdown = tk.OptionMenu(root, from_currency, 'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', bg='#FFFFFF', fg='#000000')
+from_currency_dropdown.grid(row=1, column=1, padx=10, pady=10)
+
+to_currency_label = tk.Label(root, text='To Currency:', bg='#FFFFFF', fg='#000000')
+to_currency_label.grid(row=2, column=0, padx=10, pady=10)
+
+to_currency = tk.StringVar()
+to_currency.set('EUR')
+
+to_currency_dropdown = tk.OptionMenu(root, to_currency, 'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', bg='#FFFFFF', fg='#000000')
+to_currency_dropdown.grid(row=2, column=1, padx=10, pady=10)
+
+# Define the output widgets
+converted_amount_label = tk.Label(root, text='', bg='#FFFFFF', fg='#000000')
+converted_amount_label.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+
+# Define the conversion function
+def convert_currency():
+    api_key = 'YOUR_API_ACCESS_KEY_HERE'
+    from_curr = from_currency.get()
+    to_curr = to_currency.get()
+    amount = float(amount_entry.get())
+    url = f'https://api.apilayer.com/fixer/convert?to={to_curr}&from={from_curr}&amount={amount}'
+
+    payload = {}
+    headers = {
+        "apikey": "TvdtqKIItwk0VT34slnzQVJLsrJgaa7k"
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    status_code = response.status_code
+    result = response.text
+    converted_amount_label.config(text=f'{result} {to_curr}', bg='#FFFFFF', fg='#000000')
+
+# Define the conversion button
+convert_button = tk.Button(root, text='Convert', command=convert_currency, bg='#FFFFFF', fg='#000000')
+convert_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
+
+# Run the Tkinter event loop
+root.mainloop()
